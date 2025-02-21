@@ -13,7 +13,6 @@ export default function Root() {
       <ThemeProvider>
         <SWRConfig
           value={{
-            refreshInterval: 3000,
             fetcher: fetcher,
           }}
         >

@@ -20,7 +20,6 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
     const readToken = async () => {
       try {
         const token = await getData<string>('token');
-        console.log({ token })
         if (token) {
           setIsAuthenticated(true);
         }

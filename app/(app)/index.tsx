@@ -14,17 +14,26 @@ import { Button } from "@/components/Button";
 import { ThemeType, useTheme } from "@/hooks/useTheme";
 import { MenuItem } from "@/components/MenuItem";
 import { useMenu } from "@/hooks/useMenu";
-import { useState } from "react";
-import { includes, xor } from "lodash";
+import { useState, useEffect } from "react";
+import { includes, isEmpty, xor } from "lodash";
+import { useDebounce } from "use-debounce";
 
 export default function Index() {
+  const filterButtons = ["Starters", "Mains", "Desserts", "Drinks"];
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const [debouncedSelectedFilters] = useDebounce(selectedFilters, 500);
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { menu } = useMenu();
+  const { menu, filterMenu, isLoading: isLoadingMenu } = useMenu();
 
-  const [selectedFilters, setSelectedFilters] = useState<string[]>();
-
-  const filterButtons = ["Starters", "Mains", "Desserts", "Drinks"];
+  useEffect(() => {
+    filterMenu({
+      query: debouncedSearchQuery,
+      categories: debouncedSelectedFilters,
+    });
+  }, [debouncedSearchQuery, debouncedSelectedFilters]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -67,7 +76,12 @@ export default function Index() {
                   style={{ flex: 2, ...theme.spacings.image.radiusMd }}
                 />
               </View>
-              <Input placeholder="Search" />
+              <Input
+                placeholder="Search"
+                onChangeText={setSearchQuery}
+                value={searchQuery}
+                clearButtonMode="always"
+              />
             </View>
             <View style={{ ...theme.spacings.container.md }}>
               <Text style={{ ...theme.spacings.text.mb2 }} variant="section">
@@ -78,13 +92,15 @@ export default function Index() {
                 contentContainerStyle={{ ...theme.spacings.view.gap2 }}
               >
                 {filterButtons.map((buttonName, i) => {
-                  const isSelected = includes(selectedFilters, buttonName)
+                  const isSelected = includes(selectedFilters, buttonName);
                   return (
                     <Button
                       key={`${i}-buttonName`}
                       selected={isSelected}
                       text={buttonName}
-                      onPress={() => setSelectedFilters(xor(selectedFilters, [buttonName]))}
+                      onPress={() =>
+                        setSelectedFilters(xor(selectedFilters, [buttonName]))
+                      }
                     />
                   );
                 })}
@@ -92,7 +108,15 @@ export default function Index() {
             </View>
           </>
         )}
-        ListEmptyComponent={() => <ActivityIndicator />}
+        ListEmptyComponent={() => (
+          <View style={{ ...theme.spacings.container.md }}>
+            {isLoadingMenu && isEmpty(menu) ? (
+              <ActivityIndicator animating={isLoadingMenu} />
+            ) : (
+              <Text>No results found.</Text>
+            )}
+          </View>
+        )}
         renderItem={({ item }) => <MenuItem item={item} />}
         keyExtractor={(item) => item.name + item.price}
       />
