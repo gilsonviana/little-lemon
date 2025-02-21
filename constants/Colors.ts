@@ -6,8 +6,26 @@
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
-export const Colors = {
+type ColorKeys = 'accent1' | 'accent2' | 'inactiveBackground' | 'text' | 'background' | 'tint' | 'icon' | 'tabIconDefault' | 'tabIconSelected'
+
+type Colors = {
   light: {
+    [key in ColorKeys]: string
+  }
+  dark: {
+    [key in ColorKeys]: string
+  }
+}
+
+export type ThemeColors = {
+  [key in ColorKeys]: string
+}
+
+export const Colors: Colors = {
+  light: {
+    accent1: '#495E57',
+    accent2: '#F4CE14',
+    inactiveBackground: '#EDEFEE',
     text: '#11181C',
     background: '#fff',
     tint: tintColorLight,
@@ -16,6 +34,9 @@ export const Colors = {
     tabIconSelected: tintColorLight,
   },
   dark: {
+    accent1: '#495E57',
+    accent2: '#F4CE14',
+    inactiveBackground: '#EDEFEE',
     text: '#ECEDEE',
     background: '#151718',
     tint: tintColorDark,
