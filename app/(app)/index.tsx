@@ -1,4 +1,3 @@
-import { useAuth } from "@/hooks/useAuth";
 import {
   FlatList,
   Image,
@@ -6,40 +5,31 @@ import {
   ScrollView,
   View,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { Header } from "@/components/Header";
 import { Text } from "@/components/Text";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { ThemeType, useTheme } from "@/hooks/useTheme";
-import { MenuItem, MenuItemType } from "@/components/MenuItem";
-
-const MOCK_DATA: MenuItemType[] = [
-  {
-    id: 1,
-    name: "Cheeseburger",
-    description: "A classic cheeseburger with lettuce, tomato, and pickles.",
-    price: 12.99,
-    image: "https://via.assets.so/img.jpg?w=150&h=150&tc=blue&bg=#cecece",
-  },
-  {
-    id: 2,
-    name: "Cheeseburger 2",
-    description: "A classic cheeseburger with lettuce, tomato, and pickles.",
-    price: 12.99,
-    image: "https://via.assets.so/img.jpg?w=150&h=150&tc=blue&bg=#cecece",
-  },
-];
+import { MenuItem } from "@/components/MenuItem";
+import { useMenu } from "@/hooks/useMenu";
+import { useState } from "react";
+import { includes, xor } from "lodash";
 
 export default function Index() {
-  const { logout } = useAuth();
   const theme = useTheme();
   const styles = getStyles(theme);
+  const { menu } = useMenu();
+
+  const [selectedFilters, setSelectedFilters] = useState<string[]>();
+
+  const filterButtons = ["Starters", "Mains", "Desserts", "Drinks"];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <FlatList
-        contentContainerStyle={{ flex: 1 }}
-        data={MOCK_DATA}
+        data={menu}
         ListHeaderComponent={() => (
           <>
             <Header />
@@ -79,7 +69,6 @@ export default function Index() {
               </View>
               <Input placeholder="Search" />
             </View>
-
             <View style={{ ...theme.spacings.container.md }}>
               <Text style={{ ...theme.spacings.text.mb2 }} variant="section">
                 Order for delivery!
@@ -88,16 +77,24 @@ export default function Index() {
                 horizontal
                 contentContainerStyle={{ ...theme.spacings.view.gap2 }}
               >
-                <Button text="Starters" />
-                <Button text="Mains" />
-                <Button text="Desserts" />
-                <Button text="Drinks" />
+                {filterButtons.map((buttonName, i) => {
+                  const isSelected = includes(selectedFilters, buttonName)
+                  return (
+                    <Button
+                      key={`${i}-buttonName`}
+                      selected={isSelected}
+                      text={buttonName}
+                      onPress={() => setSelectedFilters(xor(selectedFilters, [buttonName]))}
+                    />
+                  );
+                })}
               </ScrollView>
             </View>
           </>
         )}
+        ListEmptyComponent={() => <ActivityIndicator />}
         renderItem={({ item }) => <MenuItem item={item} />}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.name + item.price}
       />
     </SafeAreaView>
   );

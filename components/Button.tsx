@@ -7,11 +7,12 @@ interface IButton extends ComponentProps<typeof Pressable> {
   text?: string
   textStyle?: StyleProp<TextStyle>
   containerStyle?: StyleProp<ViewStyle>
+  selected?: boolean
 }
 
-export const Button = ({ text, textStyle, containerStyle, ...props }: IButton) => {
+export const Button = ({ text, textStyle, containerStyle, selected, ...props }: IButton) => {
   const theme = useTheme();
-  const styles = getStyles(theme)
+  const styles = getStyles(theme, selected)
 
   return (
     <Pressable {...props}>
@@ -22,14 +23,14 @@ export const Button = ({ text, textStyle, containerStyle, ...props }: IButton) =
   )
 }
 
-const getStyles = (theme: ThemeType) => StyleSheet.create({
+const getStyles = (theme: ThemeType, selected = false) => StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.inactiveBackground,
+    backgroundColor: selected ? theme.colors.accent1 : theme.colors.inactiveBackground,
     alignItems: 'center',
   },
   text: {
     textAlign: 'center',
-    color: theme.colors.accent1,
+    color: selected ? theme.colors.neutral0 : theme.colors.accent1,
     ...theme.fonts.button
   }
 })
