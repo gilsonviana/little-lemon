@@ -1,72 +1,117 @@
-import React, { useState } from 'react';
-import { Pressable, Image, StyleSheet, View } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { Ionicons } from '@expo/vector-icons';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from "react";
+import { Pressable, Image, StyleSheet, View, ViewStyle } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@/components/Text";
+import { useAsyncStorage } from "@/hooks/useAsyncStorage";
+import { useTheme } from "@/hooks/useTheme";
+import { ThemeSpacing } from "@/constants/Spacing";
+import { Href, useRouter, useFocusEffect } from "expo-router";
 
 interface AvatarProps {
-  size?: number;
+  href?: Href;
+  size?: keyof ThemeSpacing["avatar"];
+  storage?: boolean;
   imageUrl?: string;
-  onImageChange?: (uri: string) => void;
   label?: string;
+  onImageChange?: (uri: string) => void;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
-  size = 100,
-  imageUrl,
-  label,
-  onImageChange,
-}) => {
-  const [image, setImage] = useState<string | undefined>(imageUrl);
+export interface AvatarRef {
+  removeImage: () => Promise<void>;
+}
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
+// export const Avatar: React.FC<AvatarProps> = ;
+export const Avatar = forwardRef(
+  (
+    { href, size = "md", storage, imageUrl, label, onImageChange }: AvatarProps,
+    ref: React.ForwardedRef<AvatarRef>
+  ) => {
+    const { push } = useRouter();
+    const { storeData, getData, removeData } = useAsyncStorage();
+    const theme = useTheme();
+    const [image, setImage] = useState<string | undefined>(imageUrl);
+
+    const pickImage = async () => {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        storeData("avatar", result.assets[0].uri);
+        setImage(result.assets[0].uri);
+        onImageChange?.(result.assets[0].uri);
+      }
+    };
+
+    useFocusEffect(() => {
+      if (storage) {
+        getData<string>("avatar").then((data) => {
+          setImage(data ?? undefined);
+        });
+      }
     });
 
-    if (!result.canceled && result.assets[0]) {
-      setImage(result.assets[0].uri);
-      onImageChange?.(result.assets[0].uri);
-    }
-  };
+    useImperativeHandle(ref, () => ({
+      removeImage: async () => {
+        await removeData("avatar");
+        setImage(undefined);
+      },
+    }));
 
-  return (
-    <View style={styles.wrapper}>
-      {label && (<Text>Avatar</Text>)}
-      <Pressable onPress={pickImage} style={[styles.container, { width: size, height: size }]}>
-        {image ? (
-          <Image
-            source={{ uri: image }}
-            style={[styles.image, { width: size, height: size }]}
-          />
-        ) : (
-          <View style={[styles.placeholder, { width: size, height: size }]}>
-            <Ionicons name="person" size={size * 0.6} color="#666" />
-          </View>
-        )}
-      </Pressable>
-    </View>
-  );
-};
+    return (
+      <View style={styles.wrapper}>
+        {label && <Text>Avatar</Text>}
+        <Pressable
+          onPress={() => {
+            !href && pickImage();
+            href && push(href);
+          }}
+          style={[styles.container]}
+        >
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              style={[styles.image, theme.spacings.avatar[size]]}
+            />
+          ) : (
+            <View
+              style={[
+                styles.placeholder,
+                theme.spacings.avatar[size] as ViewStyle,
+              ]}
+            >
+              <Ionicons name="person" size={16} color="#666" />
+            </View>
+          )}
+        </Pressable>
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   wrapper: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   container: {
     borderRadius: 999,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   image: {
     borderRadius: 999,
   },
   placeholder: {
-    backgroundColor: '#e1e1e1',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#e1e1e1",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 999,
   },
 });

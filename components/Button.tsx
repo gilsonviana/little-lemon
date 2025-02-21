@@ -1,8 +1,7 @@
-
-import { ThemeColors } from '@/constants/Colors'
-import { useTheme } from '@/hooks/useTheme'
+import { ThemeType, useTheme } from "@/hooks/useTheme";
 import { ComponentProps } from 'react'
-import { Pressable, View, Text, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native'
+import { Text } from "@/components/Text";
+import { Pressable, View, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native'
 
 interface IButton extends ComponentProps<typeof Pressable> {
   text?: string
@@ -11,29 +10,26 @@ interface IButton extends ComponentProps<typeof Pressable> {
 }
 
 export const Button = ({ text, textStyle, containerStyle, ...props }: IButton) => {
-  const colors = useTheme()
-  const styles = getStyles(colors)
+  const theme = useTheme();
+  const styles = getStyles(theme)
 
   return (
     <Pressable {...props}>
-      <View style={[styles.container, containerStyle]}>
+      <View style={[styles.container, {...theme.spacings.button.md}, containerStyle]}>
         <Text style={[styles.text, textStyle]}>{text}</Text>
       </View>
     </Pressable>
   )
 }
 
-const getStyles = (colors: ThemeColors) => StyleSheet.create({
+const getStyles = (theme: ThemeType) => StyleSheet.create({
   container: {
-    backgroundColor: colors.accent1,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignItems: 'center'
+    backgroundColor: theme.colors.inactiveBackground,
+    alignItems: 'center',
   },
   text: {
     textAlign: 'center',
-    fontSize: 18,
-    color: colors.inactiveBackground
+    color: theme.colors.accent1,
+    ...theme.fonts.button
   }
 })

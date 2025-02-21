@@ -1,5 +1,7 @@
+import { ThemeType, useTheme } from "@/hooks/useTheme"
 import { ComponentProps } from "react"
-import { TextInput, View, Text, StyleProp, ViewStyle, StyleSheet, TextStyle } from "react-native"
+import { Text } from "@/components/Text";
+import { TextInput, View, StyleProp, ViewStyle, StyleSheet, TextStyle } from "react-native"
 
 interface IInput extends ComponentProps<typeof TextInput> {
   label?: string
@@ -8,6 +10,9 @@ interface IInput extends ComponentProps<typeof TextInput> {
 }
 
 export const Input = ({ label, labelStyle, containerStyle, ...props }: IInput) => {
+  const theme = useTheme();
+  const styles = getStyles(theme)
+
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
@@ -16,7 +21,7 @@ export const Input = ({ label, labelStyle, containerStyle, ...props }: IInput) =
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ThemeType) => StyleSheet.create({
   container: {
     alignItems: 'flex-start',
   },
@@ -30,6 +35,8 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 16,
     paddingVertical: 8,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    backgroundColor: theme.colors.inactiveBackground,
+    color: theme.colors.neutral100
   }
 })

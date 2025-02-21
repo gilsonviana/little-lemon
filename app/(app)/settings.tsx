@@ -1,25 +1,39 @@
-import { KeyboardAvoidingView, SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import {
+  KeyboardAvoidingView,
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
-import { Avatar } from "@/components/Avatar";
+import { Avatar, AvatarRef } from "@/components/Avatar";
 import { Input } from "@/components/Input";
-import Checkbox from 'expo-checkbox';
+import Checkbox from "expo-checkbox";
 import { useAuth } from "@/hooks/useAuth";
+import { useRef } from "react";
 
 export default function Settings() {
   const { logout } = useAuth();
+  const avatarRef = useRef<AvatarRef>(null);
+
+  const onRemoveAvatar = async () => {
+    await avatarRef.current?.removeImage();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={{ flex: 1, padding: 16, gap: 16 }}>
-        <ScrollView contentContainerStyle={{ alignItems: 'flex-start' }}>
+        <ScrollView contentContainerStyle={{ alignItems: "flex-start" }}>
           <View>
             <Text>Personal information</Text>
             <View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 24 }}>
-                <Avatar label="Avatar" />
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                  <Button text="Change" />
-                  <Button text="Remove" />
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 24 }}
+              >
+                <Avatar ref={avatarRef} storage size="lg" label="Avatar" />
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <Button onPress={onRemoveAvatar} text="Remove" />
                 </View>
               </View>
             </View>
@@ -59,17 +73,17 @@ export default function Settings() {
         <Button text="Logout" onPress={logout} />
       </KeyboardAvoidingView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   formGroup: {
     marginBlock: 8,
-    width: '100%'
+    width: "100%",
   },
   formGroupCheckBox: {
     marginBlock: 8,
-    flexDirection: 'row',
-    gap: 8
-  }
-})
+    flexDirection: "row",
+    gap: 8,
+  },
+});
