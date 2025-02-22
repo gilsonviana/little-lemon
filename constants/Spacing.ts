@@ -1,75 +1,79 @@
-import { ImageStyle, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native'
 type SpacingSections =
-  | "header"
-  | "container"
-  | "list-card"
-  | "section"
-  | "button";
-type SpacingKeys = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
-type SpacingKeyStyle = Record<SpacingKeys, ViewStyle>;
+  | 'header'
+  | 'container'
+  | 'list-card'
+  | 'section'
+  | 'button'
+type SpacingKeys = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+type SpacingKeyStyle = Record<SpacingKeys, ViewStyle>
 type SpacingUtilViewKeys =
-  | "flexVertical"
-  | "flexHorizontal"
-  | "flexCenter"
-  | "flexBetween"
+  | 'flexVertical'
+  | 'flexHorizontal'
+  | 'flexCenter'
+  | 'flexBetween'
   | 'gap1'
   | 'gap2'
   | 'gap3'
   | 'gap4'
-  | "mb1"
-  | "mb2"
-  | "mr1"
-  | "mr2"
-  | "borderBottom"
-type SpacingUtilTextKeys =
-  | "mb1"
-  | "mb2"
-  | "mb3";
-type SpacingUtilImageKeys = "radiusSm" | "radiusMd";
+  | 'mb1'
+  | 'mb2'
+  | 'mb3'
+  | 'mb4'
+  | 'mr1'
+  | 'mr2'
+  | 'borderBottom'
+type SpacingUtilTextKeys = 'mb1' | 'mb2' | 'mb3'
+type SpacingUtilImageKeys = 'radiusSm' | 'radiusMd'
 type SpacingUtilStyle = {
-  view: Record<SpacingUtilViewKeys, ViewStyle>;
-  text: Record<SpacingUtilTextKeys, TextStyle>;
-  image: Record<SpacingUtilImageKeys, ImageStyle>;
-};
+  view: Record<SpacingUtilViewKeys, ViewStyle>
+  text: Record<SpacingUtilTextKeys, TextStyle>
+  image: Record<SpacingUtilImageKeys, ImageStyle>
+}
 
-export type ThemeSpacing =
-  Record<SpacingSections, Partial<SpacingKeyStyle>> &
-  { avatar: Record<'sm' | 'md' | 'lg', ImageStyle> } &
-  SpacingUtilStyle;
+export type ThemeSpacing = Record<SpacingSections, Partial<SpacingKeyStyle>> & {
+  avatar: Record<'sm' | 'md' | 'lg', ImageStyle>
+} & SpacingUtilStyle
 
 export const SpacingUtils: SpacingUtilStyle = {
   view: {
     flexVertical: {
-      flexDirection: "column",
+      flexDirection: 'column',
     },
     flexHorizontal: {
-      flexDirection: "row",
+      flexDirection: 'row',
     },
     flexCenter: {
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     flexBetween: {
-      flexDirection: "row",
-      justifyContent: "space-between",
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     gap1: {
-      gap: 4
+      gap: 4,
     },
     gap2: {
-      gap: 8
+      gap: 8,
     },
     gap3: {
-      gap: 16
+      gap: 16,
     },
     gap4: {
-      gap: 24
+      gap: 24,
     },
     mb1: {
       marginBottom: 4,
     },
     mb2: {
       marginBottom: 8,
+    },
+    mb3: {
+      marginBottom: 16,
+    },
+    mb4: {
+      marginBottom: 24,
     },
     mr1: {
       marginRight: 4,
@@ -78,7 +82,7 @@ export const SpacingUtils: SpacingUtilStyle = {
       marginRight: 8,
     },
     borderBottom: {
-      borderBottomWidth: 0.5
+      borderBottomWidth: 0.5,
     },
   },
   text: {
@@ -94,13 +98,13 @@ export const SpacingUtils: SpacingUtilStyle = {
   },
   image: {
     radiusSm: {
-      borderRadius: 4
+      borderRadius: 4,
     },
     radiusMd: {
-      borderRadius: 8
+      borderRadius: 8,
     },
-  }
-};
+  },
+}
 
 export const Spacings: ThemeSpacing = {
   header: {
@@ -109,7 +113,7 @@ export const Spacings: ThemeSpacing = {
   container: {
     md: { padding: 16 },
   },
-  "list-card": {
+  'list-card': {
     md: { padding: 16 },
   },
   section: {
@@ -124,4 +128,4 @@ export const Spacings: ThemeSpacing = {
     lg: { width: 64, height: 64 },
   },
   ...SpacingUtils,
-};
+}

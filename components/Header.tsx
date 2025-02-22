@@ -1,10 +1,10 @@
-import { View } from "react-native";
-import { Text } from "@/components/Text";
-import { useTheme } from "@/hooks/useTheme";
-import { Avatar } from "./Avatar";
+import { View } from 'react-native'
+import { Text } from '@/components/Text'
+import { useTheme } from '@/hooks/useTheme'
+import { Avatar } from './Avatar'
 
 export const Header = () => {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <View
       style={{
@@ -12,8 +12,10 @@ export const Header = () => {
         ...theme.spacings.view.flexBetween,
       }}
     >
-      <Text color="accent1">Little Lemon</Text>
+      <Text variant="heading" color="accent1">
+        Restaurant App
+      </Text>
       <Avatar storage href="/settings" />
     </View>
-  );
-};
+  )
+}

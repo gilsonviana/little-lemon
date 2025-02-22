@@ -1,10 +1,9 @@
-
-import { useSQLiteContext } from 'expo-sqlite';
+import { useSQLiteContext } from 'expo-sqlite'
 
 export const useDB = () => {
-  const db = useSQLiteContext();
+  const db = useSQLiteContext()
 
   return {
-    db
-  };
-};
+    db,
+  }
+}

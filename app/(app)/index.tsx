@@ -6,37 +6,39 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-} from "react-native";
-import { Header } from "@/components/Header";
-import { Text } from "@/components/Text";
-import { Input } from "@/components/Input";
-import { Button } from "@/components/Button";
-import { ThemeType, useTheme } from "@/hooks/useTheme";
-import { MenuItem } from "@/components/MenuItem";
-import { useMenu } from "@/hooks/useMenu";
-import { useState, useEffect } from "react";
-import { includes, isEmpty, xor } from "lodash";
-import { useDebounce } from "use-debounce";
+  ImageSourcePropType,
+} from 'react-native'
+import { Header } from '@/components/Header'
+import { Text } from '@/components/Text'
+import { Input } from '@/components/Input'
+import { Button } from '@/components/Button'
+import { ThemeType, useTheme } from '@/hooks/useTheme'
+import { MenuItem } from '@/components/MenuItem'
+import { useMenu } from '@/hooks/useMenu'
+import { useState, useEffect } from 'react'
+import { includes, isEmpty, xor } from 'lodash'
+import { useDebounce } from 'use-debounce'
+import frontDoorImage from '@/assets/images/front.jpg'
 
 export default function Index() {
-  const filterButtons = ["Starters", "Mains", "Desserts", "Drinks"];
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  const [debouncedSelectedFilters] = useDebounce(selectedFilters, 500);
-  const theme = useTheme();
-  const styles = getStyles(theme);
-  const { menu, filterMenu, isLoading: isLoadingMenu } = useMenu();
+  const filterButtons = ['Starters', 'Mains', 'Desserts', 'Drinks']
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
+  const [debouncedSelectedFilters] = useDebounce(selectedFilters, 500)
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const { menu, filterMenu, isLoading: isLoadingMenu } = useMenu()
 
   useEffect(() => {
     filterMenu({
       query: debouncedSearchQuery,
       categories: debouncedSelectedFilters,
-    });
-  }, [debouncedSearchQuery, debouncedSelectedFilters]);
+    })
+  }, [debouncedSearchQuery, debouncedSelectedFilters])
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <FlatList
         data={menu}
         ListHeaderComponent={() => (
@@ -49,7 +51,7 @@ export default function Index() {
               <View
                 style={{
                   ...theme.spacings.view.flexHorizontal,
-                  overflow: "hidden",
+                  overflow: 'hidden',
                 }}
               >
                 <View style={{ flex: 3, ...theme.spacings.view.mr2 }}>
@@ -66,14 +68,12 @@ export default function Index() {
                   </Text>
                 </View>
                 <Image
-                  source={{
-                    uri: "https://via.assets.so/img.jpg?w=150&h=150&tc=blue&bg=#cecece",
+                  source={frontDoorImage as ImageSourcePropType}
+                  style={{
+                    flex: 2,
+                    aspectRatio: '3/4',
+                    ...theme.spacings.image.radiusMd,
                   }}
-                  width={150}
-                  height={150}
-                  resizeMode="cover"
-                  resizeMethod="scale"
-                  style={{ flex: 2, ...theme.spacings.image.radiusMd }}
                 />
               </View>
               <Input
@@ -92,7 +92,7 @@ export default function Index() {
                 contentContainerStyle={{ ...theme.spacings.view.gap2 }}
               >
                 {filterButtons.map((buttonName, i) => {
-                  const isSelected = includes(selectedFilters, buttonName);
+                  const isSelected = includes(selectedFilters, buttonName)
                   return (
                     <Button
                       key={`${i}-buttonName`}
@@ -102,7 +102,7 @@ export default function Index() {
                         setSelectedFilters(xor(selectedFilters, [buttonName]))
                       }
                     />
-                  );
+                  )
                 })}
               </ScrollView>
             </View>
@@ -121,7 +121,7 @@ export default function Index() {
         keyExtractor={(item) => item.name + item.price}
       />
     </SafeAreaView>
-  );
+  )
 }
 
 const getStyles = (theme: ThemeType) =>
@@ -130,4 +130,4 @@ const getStyles = (theme: ThemeType) =>
       backgroundColor: theme.colors.accent1,
       ...theme.spacings.container.md,
     },
-  });
+  })

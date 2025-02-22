@@ -1,6 +1,6 @@
 export const conditionalKey = (condition: boolean, key: string) => {
   if (condition) {
-    return key;
+    return key
   }
-  return null;
+  return null
 }

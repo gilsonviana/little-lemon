@@ -1,19 +1,14 @@
-import {
-  Pressable,
-  PressableProps,
-  View,
-  Image,
-} from "react-native";
-import { Text } from "@/components/Text";
-import { useTheme } from "@/hooks/useTheme";
-import { MenuItemType } from "@/hooks/useMenu";
+import { Pressable, PressableProps, View, Image } from 'react-native'
+import { Text } from '@/components/Text'
+import { useTheme } from '@/hooks/useTheme'
+import { MenuItemType } from '@/hooks/useMenu'
 
 interface IMenuItems extends PressableProps {
-  item: MenuItemType;
+  item: MenuItemType
 }
 
 export const MenuItem = ({ item, ...props }: IMenuItems) => {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Pressable {...props}>
@@ -21,7 +16,7 @@ export const MenuItem = ({ item, ...props }: IMenuItems) => {
         style={{
           ...theme.spacings.view.borderBottom,
           borderColor: theme.colors.inactiveBackground,
-          ...theme.spacings["list-card"].md,
+          ...theme.spacings['list-card'].md,
         }}
       >
         <Text variant="card-title">{item.name}</Text>
@@ -59,5 +54,5 @@ export const MenuItem = ({ item, ...props }: IMenuItems) => {
         </View>
       </View>
     </Pressable>
-  );
-};
+  )
+}

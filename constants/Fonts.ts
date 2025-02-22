@@ -1,6 +1,17 @@
-import { TextStyle } from "react-native"
+import { TextStyle } from 'react-native'
 
-type FontVariants = 'display' | 'heading' | 'subheading' | 'lead' | 'section' | 'card-title' | 'card-body' | 'card-highlight' | 'body' | 'button'
+type FontVariants =
+  | 'display'
+  | 'heading'
+  | 'subheading'
+  | 'lead'
+  | 'section'
+  | 'card-title'
+  | 'card-body'
+  | 'card-highlight'
+  | 'body'
+  | 'button'
+  | 'label'
 type FontSchema = TextStyle
 export type ThemeFonts = Record<FontVariants, FontSchema>
 
@@ -24,7 +35,7 @@ export const Fonts: ThemeFonts = {
   section: {
     fontSize: 18,
     fontWeight: 'bold',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   'card-title': {
     fontSize: 16,
@@ -45,6 +56,10 @@ export const Fonts: ThemeFonts = {
   },
   button: {
     fontSize: 15,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
 }

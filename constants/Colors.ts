@@ -1,5 +1,12 @@
 type ThemeSchemas = 'light' | 'dark'
-type ColorKeys = 'accent1' | 'accent2' | 'neutral0' | 'neutral50' | 'neutral100' | 'inactiveBackground' | 'background'
+type ColorKeys =
+  | 'accent1'
+  | 'accent2'
+  | 'neutral0'
+  | 'neutral50'
+  | 'neutral100'
+  | 'inactiveBackground'
+  | 'background'
 
 export type ThemePalette = {
   [key in ColorKeys]: string
@@ -26,4 +33,4 @@ export const Colors: ThemePalettes = {
     inactiveBackground: '#EDEFEE',
     background: '#151718',
   },
-};
+}
