@@ -9,7 +9,14 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 export default function Root() {
   return (
-    <SQLiteProvider databaseName="littleLemon.db">
+    <SQLiteProvider
+      databaseName="littleLemon.db"
+      onInit={async (db) => {
+        await db.execAsync(
+          'CREATE TABLE IF NOT EXISTS menu (name TEXT, price REAL, description TEXT, image TEXT, category TEXT)',
+        )
+      }}
+    >
       <ThemeProvider>
         <SWRConfig
           value={{

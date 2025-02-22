@@ -21,7 +21,6 @@ type Filters = {
 }
 
 export const useMenu = () => {
-  const [initialDbMenu, setInitalDbMenu] = useState<MenuItemType[]>()
   const [filtereDbMenu, setFilteredDbMenu] = useState<MenuItemType[]>()
 
   const { db } = useDB()
@@ -31,16 +30,12 @@ export const useMenu = () => {
     null,
     {
       onSuccess: async (data) => {
+        setFilteredDbMenu(data.menu)
         try {
           const dbMenu =
             await db.getAllAsync<MenuItemType>('SELECT * FROM menu')
 
-          if (!isEmpty(dbMenu)) {
-            setInitalDbMenu(dbMenu)
-          } else {
-            await db.execAsync(
-              'CREATE TABLE IF NOT EXISTS menu (name TEXT, price REAL, description TEXT, image TEXT, category TEXT)',
-            )
+          if (isEmpty(dbMenu)) {
             await db.execAsync('DELETE FROM menu')
             data.menu.forEach(async (item) => {
               await db.runAsync(
@@ -56,7 +51,7 @@ export const useMenu = () => {
             })
           }
         } catch (error) {
-          console.log('Table does not exist', error)
+          console.error('Table does not exist', error)
           await db.execAsync(
             'CREATE TABLE IF NOT EXISTS menu (name TEXT, price REAL, description TEXT, image TEXT, category TEXT)',
           )
@@ -100,7 +95,7 @@ export const useMenu = () => {
   )
 
   return {
-    menu: filtereDbMenu ? filtereDbMenu : (initialDbMenu ?? data?.menu),
+    menu: filtereDbMenu ?? data?.menu,
     isLoading: isLoading,
     hasError: error,
     filterMenu,
